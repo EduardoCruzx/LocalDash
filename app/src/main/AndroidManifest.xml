@@ -59,7 +59,9 @@
             android:name=".transfer.DataTransferService"
             android:enabled="true" />
 
-        <activity android:name=".BattleActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoTitle"></activity>
     </application>
 
 </manifest>
