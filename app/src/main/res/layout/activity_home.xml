@@ -1,74 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
+    tools:context=".ConnectActivity"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConnectActivity">
+    android:background="@mipmap/pirates"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="565dp"
+    tools:layout_editor_absoluteY="0dp">
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/player_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/pirates"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="565dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_bigger"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="@android:color/background_light"
+        android:ems="10"
+        android:hint="@string/enter_name_hint"
+        android:inputType="textPersonName"
+        android:paddingLeft="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingBottom="@dimen/margin_small" />
 
-        <EditText
-            android:id="@+id/player_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_bigger"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:background="@android:color/background_light"
-            android:ems="10"
-            android:hint="@string/enter_name_hint"
-            android:inputType="textPersonName"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small" />
+    <Button
+        android:id="@+id/btn_match"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_home_player_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="@color/design_default_color_primary_dark"
+        android:elevation="55dp"
+        android:shadowColor="@android:color/background_dark"
+        android:shadowDx="20px"
+        android:shadowDy="30px"
+        android:shadowRadius="30px"
+        android:text="@string/txt_begin"
+        android:textColor="?attr/colorBackgroundFloating" />
 
-        <Button
-            android:id="@+id/btn_match"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/et_home_player_name"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginTop="120dp"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:background="@color/design_default_color_primary_dark"
-            android:elevation="55dp"
-            android:onClick="startNSD"
-            android:shadowColor="@android:color/background_dark"
-            android:shadowDx="20px"
-            android:shadowDy="30px"
-            android:shadowRadius="30px"
-            android:text="@string/txt_begin"
-            android:textColor="?attr/colorBackgroundFloating" />
-
-        <Button
-            android:id="@+id/btn_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/et_home_player_name"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_big"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:background="@color/design_default_color_primary_dark"
-            android:onClick="startNSD"
-            android:text="@string/txt_info"
-            android:textColor="?attr/colorBackgroundFloating" />
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_home_player_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="@color/design_default_color_primary_dark"
+        android:text="@string/txt_info"
+        android:textColor="?attr/colorBackgroundFloating" />
+</LinearLayout>
