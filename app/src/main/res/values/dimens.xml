@@ -11,4 +11,5 @@
     <dimen name="text_big">25sp</dimen>
     <dimen name="text_reg">20sp</dimen>
     <dimen name="text_small">15sp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>
