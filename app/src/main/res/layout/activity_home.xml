@@ -46,11 +46,6 @@
         android:layout_marginTop="120dp"
         android:layout_marginRight="@dimen/margin_medium"
         android:background="@color/design_default_color_primary_dark"
-        android:elevation="55dp"
-        android:shadowColor="@android:color/background_dark"
-        android:shadowDx="20px"
-        android:shadowDy="30px"
-        android:shadowRadius="30px"
         android:text="@string/txt_begin"
         android:textColor="?attr/colorBackgroundFloating" />
 
