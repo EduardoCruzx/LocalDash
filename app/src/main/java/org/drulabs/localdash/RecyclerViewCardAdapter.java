@@ -24,7 +24,7 @@ public class RecyclerViewCardAdapter extends RecyclerView.Adapter<RecyclerViewCa
 
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_cards, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_cards, parent, false);
         ItemRowHolder rowHolder = new ItemRowHolder(v);
         return rowHolder;
     }
@@ -35,7 +35,6 @@ public class RecyclerViewCardAdapter extends RecyclerView.Adapter<RecyclerViewCa
         ArrayList singleSectionItems = dataList.get(position).getAllCardsInSection();
         holder.itemTitle.setText(sectionName);
         SectionListCardAdapter adapter = new SectionListCardAdapter(singleSectionItems, mContext);
-        holder.recyclerView.setHasFixedSize(true);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         holder.recyclerView.setAdapter(adapter);
         holder.recyclerView.setRecycledViewPool(recycledViewPool);

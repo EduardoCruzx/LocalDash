@@ -54,6 +54,11 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle"></activity>
+
+        <activity
+            android:name=".BattleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitle"></activity>
     </application>
 
 </manifest>

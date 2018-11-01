@@ -1,11 +1,18 @@
 package org.drulabs.localdash.model;
 
+import android.os.Parcelable;
+
+import org.drulabs.localdash.SectionModel;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerModel {
+public class PlayerModel implements Serializable {
     private String name, ip;
     private int level, power, port;
-    private List<CardModel> hand, itensInPlay;
+    private ArrayList<CardModel> hand, itensInPlay;
+    private ArrayList<SectionModel> handSection, tableSection;
 
     public PlayerModel() {
     }
@@ -16,13 +23,42 @@ public class PlayerModel {
         this.port = port;
         this.level = 1;
         this.power = 0;
+        this.itensInPlay = new ArrayList<>();
+        this.hand = new ArrayList<>();
+        this.handSection = new ArrayList<>();
+        this.tableSection = new ArrayList<>();
     }
 
-    public PlayerModel(String name, List<CardModel> hand) {
+    public PlayerModel(String name, ArrayList<CardModel> hand) {
         this.name = name;
         this.hand = hand;
         this.level = 1;
         this.power = 0;
+    }
+
+    public ArrayList<SectionModel> getHandSection(){
+        SectionModel dm = new SectionModel();
+        dm.setName("Hand");
+        dm.setAllCardsInSection(this.hand);
+        handSection.add(dm);
+        return handSection;
+    }
+
+    public void updateHandSection(){
+        ArrayList<SectionModel> newHandSection = new ArrayList<>();
+        SectionModel dm = new SectionModel();
+        dm.setName("Hand");
+        dm.setAllCardsInSection(this.hand);
+        newHandSection.add(dm);
+        this.handSection = newHandSection;
+    }
+
+    public ArrayList<SectionModel> getTableSection(){
+        SectionModel dm = new SectionModel();
+        dm.setName("Table");
+        dm.setAllCardsInSection(this.itensInPlay);
+        tableSection.add(dm);
+        return tableSection;
     }
 
     public String getIp() {
@@ -69,7 +105,13 @@ public class PlayerModel {
         return hand;
     }
 
-    public void setHand(List<CardModel> hand) {
+    public void setHand(ArrayList<CardModel> hand) {
+        this.hand = hand;
+    }
+
+    public void setHand(CardModel card) {
+        ArrayList<CardModel> hand = new ArrayList<>();
+        hand.add(card);
         this.hand = hand;
     }
 
@@ -77,19 +119,32 @@ public class PlayerModel {
         return itensInPlay;
     }
 
-    public void setItensInPlay(List<CardModel> itensInPlay) {
+    public void setItensInPlay(ArrayList<CardModel> itensInPlay) {
         this.itensInPlay = itensInPlay;
     }
 
     public void addItemsToHand(List<CardModel> rewards){
         this.hand.addAll(rewards);
+        updateHandSection();
+    }
+
+    public void addItemToHand(CardModel reward){
+        this.hand.add(reward);
+    }
+
+    public int addItemToTable(CardModel item){
+        int pos = hand.indexOf(item);
+        this.itensInPlay.add(hand.remove(pos));
+        return pos;
     }
 
     public void levelChange(int level){
         this.level = this.level + level;
+        if(this.level < 1)
+            this.level = 1;
     }
 
     public void print(){
-        System.out.println("Name: " + this.name + ", IP: " + this.ip + ", PORT: " + this.port);
+        System.out.println("Name: " + this.name + ", Power: " + (this.getPower() + this.getLevel()) + ", Level: " + this.getLevel());
     }
 }

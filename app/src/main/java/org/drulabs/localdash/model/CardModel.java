@@ -1,6 +1,8 @@
 package org.drulabs.localdash.model;
 
-public class CardModel {
+import java.io.Serializable;
+
+public class CardModel implements Serializable {
     public static int ITEM = 0;
     public static int ENEMY = 1;
 

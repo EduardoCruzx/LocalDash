@@ -1,7 +1,9 @@
 package org.drulabs.localdash;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.TabHost;
 
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.CardModel;
@@ -47,14 +50,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private ArrayList<SectionModel> allSampleData;
+    private ArrayList<SectionModel> myHand;
     private RecyclerView recyclerView;
-    private Button hand;
+    private Button hand, play;
     private DBAdapter dbAdapter = null;
     private DealerModel dealer = null;
     public static final String KEY_CHATTING_WITH = "chattingwith";
     public static final String KEY_CHAT_IP = "chatterip";
     public static final String KEY_CHAT_PORT = "chatterport";
+    private PlayerModel me;
+    private TabLayout tabLayout;
+    private RecyclerViewCardAdapter handAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,24 +74,31 @@ public class MainActivity extends AppCompatActivity {
             bar.hide();
         }
 
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         Bundle extras = getIntent().getExtras();
         String myName = Utility.getString(getApplication(), TransferConstants.KEY_USER_NAME);
         String myIP = Utility.getString(getApplication(), TransferConstants.KEY_MY_IP);
         int myPort = Utility.getInt(getApplication(), TransferConstants.KEY_PORT_NUMBER);
-        PlayerModel me = new PlayerModel(myName, myIP, myPort);
+        me = new PlayerModel(myName, myIP, myPort);
 
         dbAdapter = DBAdapter.getInstance(getApplicationContext());
         dealer = new DealerModel(dbAdapter);
         dealer.startGame(extras, me);
+        tabLayout.addTab(tabLayout.newTab().setText(me.getName()));
+        for(PlayerModel p : dealer.getTurnOrder()){
+            if (!p.equals(me))
+                tabLayout.addTab(tabLayout.newTab().setText(p.getName()));
+        }
 
-        allSampleData = new ArrayList<>();
-        createDummyData();
-
+        play = (Button) findViewById(R.id.btn_play);
+//        play.setVisibility(View.GONE);
         hand = (Button) findViewById(R.id.btn_hand);
         hand.setVisibility(View.VISIBLE);
         hand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println(handAdapter.getItemCount());
                 if (recyclerView.getVisibility() == View.GONE){
                     recyclerView.setVisibility(View.VISIBLE);
                 }else {
@@ -95,38 +108,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        if (dealer.getTurn().getIp().equals(me.getIp()))
+//            play.setVisibility(View.VISIBLE);
+//        else
+//            play.setVisibility(View.GONE);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CardModel enemy = dealer.kickTheDoor();
+                Intent battleIntent = new Intent(MainActivity.this, BattleActivity.class);
+                battleIntent.putExtra("enemy", enemy);
+                battleIntent.putExtra("player", me);
+                startActivityForResult(battleIntent,3);
+            }
+        });
+
+        myHand = me.getHandSection();
+
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerViewCardAdapter adapter = new RecyclerViewCardAdapter(allSampleData, this);
+        handAdapter = new RecyclerViewCardAdapter(myHand, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(handAdapter);
         recyclerView.setVisibility(View.GONE);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter.setCount(tabLayout.getTabCount());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
-    private void createDummyData() {
-        for (int i = 1; i <= 1; i++) {
-            SectionModel dm = new SectionModel();
-            dm.setName("Section " + i);
-            ArrayList<CardModel> singleItemModels = new ArrayList<>();
-            for (int j = 1; j <= 20; j++) {
-                singleItemModels.add(new CardModel(j,"Item " + j, j));
+    public void equipItem(CardModel item){
+        int pos = dealer.equipItem(item, me);
+        recyclerView.removeViewAt(pos);
+        handAdapter.notifyItemRemoved(pos);
+        handAdapter.notifyItemRangeChanged(0, me.getHand().size());
+        mSectionsPagerAdapter.notifyFragmentAdapter();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        System.out.println("RESULT");
+        if(data != null)
+            if(resultCode == RESULT_OK && requestCode == 3){
+                me = (PlayerModel) data.getSerializableExtra("player");
+                CardModel enemy = (CardModel) data.getSerializableExtra("enemy");
+                if(dealer.kill(enemy, me)) {
+                    myHand = me.getHandSection();
+                    handAdapter.notifyDataSetChanged();
+                }
+                me.print();
             }
-            dm.setAllCardsInSection(singleItemModels);
-            allSampleData.add(dm);
-        }
     }
 
     @Override
@@ -149,36 +187,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private int count;
+        ArrayList<PlaceholderFragment> fragments = new ArrayList<>();
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -188,13 +205,26 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            PlaceholderFragment fragment = PlaceholderFragment.newInstance(position + 1, dealer.getTurnOrder().get(position));
+            fragments.add(fragment);
+            return fragment;
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+
+            return this.count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public void notifyFragmentAdapter(){
+            for(PlaceholderFragment f : fragments){
+                f.notifyAdapter();
+            }
         }
     }
 
@@ -212,13 +242,13 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
+        private RecyclerViewCardAdapter itemsAdapter;
 
-
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(int sectionNumber, PlayerModel player) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putSerializable("player", player);
             fragment.setArguments(args);
             return fragment;
         }
@@ -226,44 +256,25 @@ public class MainActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        private static ArrayList<SectionModel> cardsection;
-        private static ArrayList<CardModel> items;
-        private static ArrayList<CardModel> enemies;
-        private static DBAdapter dbAdapter = null;
+        public void notifyAdapter(){
+            itemsAdapter.notifyDataSetChanged();
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            dbAdapter = DBAdapter.getInstance(this.getContext());
-            items = dbAdapter.GET_ITEMS();
-            enemies = dbAdapter.GET_ENEMIES();
-            cardsection = new ArrayList<>();
-            createDummyData();
+            PlayerModel player = (PlayerModel) this.getArguments().getSerializable("player");
 
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             recyclerView.setHasFixedSize(true);
-            RecyclerViewCardAdapter adapter = new RecyclerViewCardAdapter(cardsection, this.getContext());
+            itemsAdapter = new RecyclerViewCardAdapter(player.getTableSection(), this.getContext());
+            recyclerView.setOnLongClickListener(null);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(itemsAdapter);
 
             return rootView;
-        }
-
-        private static void createDummyData() {
-
-                System.out.println(items.size());
-                SectionModel dm = new SectionModel();
-                dm.setName("Section " + 1);
-                dm.setAllCardsInSection(items);
-            cardsection.add(dm);
-
-            System.out.println(enemies.size());
-            SectionModel dm2 = new SectionModel();
-            dm2.setName("Section " + 2);
-            dm2.setAllCardsInSection(enemies);
-            cardsection.add(dm2);
         }
     }
 }

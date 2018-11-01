@@ -77,6 +77,18 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
                 myDialog.show();
             }
         });
+
+        singleItemRowHolder.singleCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(mContext instanceof MainActivity){
+                    CardModel card = itemModels.get(singleItemRowHolder.getAdapterPosition());
+                    ((MainActivity)mContext).equipItem(card);
+                }
+                return false;
+            }
+        });
+
         return singleItemRowHolder;
     }
 
@@ -84,10 +96,6 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
     public void onBindViewHolder(SingleItemRowHolder holder, int position) {
         CardModel itemModel = itemModels.get(position);
         holder.tvTitle.setText(itemModel.getName());
-        if (itemModel.getId() < 50)
-            holder.toast = String.valueOf(itemModel.getBonus());
-        else
-            holder.toast = String.valueOf(itemModel.getPower());
     }
 
     @Override

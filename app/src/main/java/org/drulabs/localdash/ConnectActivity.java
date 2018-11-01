@@ -71,6 +71,8 @@ public class ConnectActivity extends AppCompatActivity {
         String userName = etUsername.getText().toString();
         if (userName != null && userName.trim().length() > 0) {
             Utility.saveString(ConnectActivity.this, TransferConstants.KEY_USER_NAME, userName);
+        }else{
+            Utility.saveString(ConnectActivity.this, TransferConstants.KEY_USER_NAME, Build.MANUFACTURER);
         }
     }
 

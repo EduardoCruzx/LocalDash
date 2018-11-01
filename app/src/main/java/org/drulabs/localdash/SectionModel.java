@@ -2,9 +2,10 @@ package org.drulabs.localdash;
 
 import org.drulabs.localdash.model.CardModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SectionModel {
+public class SectionModel implements Serializable {
     private String name;
     private ArrayList<CardModel> allCardsInSection;
 
