@@ -37,7 +37,7 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginTop="330dp"
         android:layout_marginRight="@dimen/margin_medium"
-        android:background="#783c00"
+        android:background="#3c8596"
         android:text="@string/txt_begin"
         android:textColor="?attr/colorBackgroundFloating" />
 
@@ -48,7 +48,7 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_big"
         android:layout_marginRight="@dimen/margin_medium"
-        android:background="#783c00"
+        android:background="#3c8596"
         android:text="@string/txt_info"
         android:textColor="?attr/colorBackgroundFloating" />
 </LinearLayout>
