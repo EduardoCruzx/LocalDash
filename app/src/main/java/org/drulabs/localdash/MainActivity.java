@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_CHAT_PORT = "chatterport";
     private PlayerModel me;
     private TabLayout tabLayout;
-    private RecyclerViewCardAdapter handAdapter;
+    private SectionListCardAdapter handAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +123,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myHand = me.getHandSection();
-
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        handAdapter = new RecyclerViewCardAdapter(myHand, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
+        handAdapter = new SectionListCardAdapter(me.getHand(), this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(handAdapter);
         recyclerView.setVisibility(View.GONE);
 
@@ -146,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void equipItem(CardModel item){
         int pos = dealer.equipItem(item, me);
-        recyclerView.removeViewAt(pos);
-        handAdapter.notifyItemRemoved(pos);
-        handAdapter.notifyItemRangeChanged(0, me.getHand().size());
-        mSectionsPagerAdapter.notifyFragmentAdapter();
+//        recyclerView.removeViewAt(pos);
+//        handAdapter.notifyItemRemoved(pos);
+//        handAdapter.notifyItemRangeChanged(0, me.getHand().size());
+//        mSectionsPagerAdapter.notifyFragmentAdapter();
     }
 
     @Override
@@ -160,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 me = (PlayerModel) data.getSerializableExtra("player");
                 CardModel enemy = (CardModel) data.getSerializableExtra("enemy");
                 if(dealer.kill(enemy, me)) {
-                    myHand = me.getHandSection();
                     handAdapter.notifyDataSetChanged();
                 }
                 me.print();
@@ -242,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        private RecyclerViewCardAdapter itemsAdapter;
+        private SectionListCardAdapter itemsAdapter;
 
         public static PlaceholderFragment newInstance(int sectionNumber, PlayerModel player) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -267,12 +264,10 @@ public class MainActivity extends AppCompatActivity {
 
             PlayerModel player = (PlayerModel) this.getArguments().getSerializable("player");
 
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            recyclerView.setHasFixedSize(true);
-            itemsAdapter = new RecyclerViewCardAdapter(player.getTableSection(), this.getContext());
-            recyclerView.setOnLongClickListener(null);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-            recyclerView.setAdapter(itemsAdapter);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_list);
+            SectionListCardAdapter adapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            recyclerView.setAdapter(adapter);
 
             return rootView;
         }

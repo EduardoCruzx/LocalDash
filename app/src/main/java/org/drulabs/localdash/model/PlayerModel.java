@@ -101,7 +101,7 @@ public class PlayerModel implements Serializable {
         this.power = power;
     }
 
-    public List<CardModel> getHand() {
+    public ArrayList<CardModel> getHand() {
         return hand;
     }
 
@@ -115,7 +115,7 @@ public class PlayerModel implements Serializable {
         this.hand = hand;
     }
 
-    public List<CardModel> getItensInPlay() {
+    public ArrayList<CardModel> getItensInPlay() {
         return itensInPlay;
     }
 
