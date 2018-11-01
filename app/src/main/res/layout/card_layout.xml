@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView6"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textSize="36sp" />
+        android:textSize="27sp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -34,7 +34,7 @@
         android:layout_marginTop="@dimen/appbar_padding_top"
         android:layout_marginBottom="@dimen/appbar_padding_top"
         android:text="Very inflamable. Fire and flame items count double against him."
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 
     <View
         android:id="@+id/view"
@@ -49,6 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/appbar_padding_top"
         android:text="Very inflamable. Fire and flame items count double against him."
-        android:textSize="16sp" />
+        android:textSize="15sp" />
 
 </LinearLayout>

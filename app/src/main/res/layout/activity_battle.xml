@@ -1,9 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/deck"
+    android:orientation="vertical"
     tools:context=".BattleActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop="@dimen/margin_big"
+        android:paddingLeft="@dimen/margin_big"
+        android:paddingRight="@dimen/margin_big">
+
+        <include
+            layout="@layout/card_layout"
+            android:layout_width=""
+            android:layout_height="" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/enemyPower"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:gravity=""
+        android:paddingLeft="@dimen/fab_margin"
+        android:text="Your power:"
+        android:textColor="#fff"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/playerPower"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/appbar_padding_top"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:gravity=""
+        android:paddingLeft="@dimen/fab_margin"
+        android:text="Enemy power:"
+        android:textColor="#fff"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/btn_kill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="#783c00"
+        android:text="Feed the Fish"
+        android:textColor="?attr/colorBackgroundFloating" />
+
+</LinearLayout>
