@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         String myName = Utility.getString(getApplication(), TransferConstants.KEY_USER_NAME);
         String myIP = Utility.getString(getApplication(), TransferConstants.KEY_MY_IP);
         int myPort = Utility.getInt(getApplication(), TransferConstants.KEY_PORT_NUMBER);
+        if(myIP == null)
+            myIP = "127.0.0.1";
+
         me = new PlayerModel(myName, myIP, myPort);
 
         dbAdapter = DBAdapter.getInstance(getApplicationContext());
@@ -98,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         hand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(handAdapter.getItemCount());
                 if (recyclerView.getVisibility() == View.GONE){
                     recyclerView.setVisibility(View.VISIBLE);
                 }else {
@@ -122,9 +124,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(battleIntent,3);
             }
         });
-        myHand = me.getHand();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
-        handAdapter = new SectionListCardAdapter(myHand, this);
+        handAdapter = new SectionListCardAdapter(me.getHand(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(handAdapter);
         recyclerView.setVisibility(View.GONE);
@@ -144,10 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void equipItem(CardModel item){
         int pos = dealer.equipItem(item, me);
-        //recyclerView.removeViewAt(pos);
         handAdapter.notifyItemRemoved(pos);
-        //handAdapter.notifyItemRangeChanged(0, me.getHand().size());
-        mSectionsPagerAdapter.notifyFragmentAdapter();
+        mSectionsPagerAdapter.notifyFragmentAdapter(me);
     }
 
     @Override
@@ -157,14 +156,10 @@ public class MainActivity extends AppCompatActivity {
                 me = (PlayerModel) data.getSerializableExtra("player");
                 CardModel enemy = (CardModel) data.getSerializableExtra("enemy");
                 if(dealer.kill(enemy, me)) {
-                    myHand = me.getHand();
-                    System.out.println(me.getHand().size() + " " + myHand.size());
+                    handAdapter = new SectionListCardAdapter(me.getHand(), this);
+                    recyclerView.setAdapter(handAdapter);
                     handAdapter.notifyDataSetChanged();
-                    for(int i =0; i < myHand.size(); i++){
-                        System.out.println(myHand.get(i).getName());
-                    }
                 }
-                me.print();
             }
     }
 
@@ -222,9 +217,10 @@ public class MainActivity extends AppCompatActivity {
             this.count = count;
         }
 
-        public void notifyFragmentAdapter(){
+        public void notifyFragmentAdapter(PlayerModel player){
             for(PlaceholderFragment f : fragments){
-                f.notifyAdapter();
+                if (f.getPlayer().getIp().equals(player.getIp()))
+                    f.notifyAdapter(player);
             }
         }
     }
@@ -244,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
          * number.
          */
         private SectionListCardAdapter itemsAdapter;
+        private RecyclerView recyclerView;
+        private PlayerModel player;
+
+        public PlayerModel getPlayer() {
+            return player;
+        }
 
         public static PlaceholderFragment newInstance(int sectionNumber, PlayerModel player) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -257,7 +259,11 @@ public class MainActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        public void notifyAdapter(){
+        public void notifyAdapter(PlayerModel player){
+            if (this.player != null)
+                this.player = player;
+            itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
+            recyclerView.setAdapter(itemsAdapter);
             itemsAdapter.notifyDataSetChanged();
         }
 
@@ -266,14 +272,22 @@ public class MainActivity extends AppCompatActivity {
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            PlayerModel player = (PlayerModel) this.getArguments().getSerializable("player");
+            player = (PlayerModel) this.getArguments().getSerializable("player");
 
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_list);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_list);
             itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(itemsAdapter);
 
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
+            recyclerView.setAdapter(itemsAdapter);
+            itemsAdapter.notifyDataSetChanged();
         }
     }
 }

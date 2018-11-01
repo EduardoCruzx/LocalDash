@@ -52,7 +52,6 @@ public class ConnectActivity extends AppCompatActivity {
             Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-
     }
 
     public void startNSD(View v) {

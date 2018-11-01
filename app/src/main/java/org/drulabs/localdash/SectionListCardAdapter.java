@@ -84,6 +84,7 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
                 if(mContext instanceof MainActivity){
                     CardModel card = itemModels.get(singleItemRowHolder.getAdapterPosition());
                     ((MainActivity)mContext).equipItem(card);
+                    return true;
                 }
                 return false;
             }
