@@ -140,7 +140,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        System.out.println("CREATE");
         db.execSQL(CREATE_DEVICE_TABLE);
         db.execSQL(CREATE_CARDS_ITEM_TABLE);
         db.execSQL(CREATE_CARDS_ENEMY_TABLE);

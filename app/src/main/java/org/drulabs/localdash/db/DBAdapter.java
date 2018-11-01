@@ -25,7 +25,6 @@ public class DBAdapter {
     private SQLiteDatabase db = null;
 
     private DBAdapter(Context context) {
-        System.out.println("CONTEXT");
         this.context = context;
         DBHelper dbHelper = new DBHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -64,7 +63,6 @@ public class DBAdapter {
 
     public ArrayList<CardModel> GET_ITEMS() {
         ArrayList<CardModel> items = null;
-        System.out.println("GET_ITEMS");
         Cursor cursor = db.query(DBHelper.TABLE_CARDS_ITEM, null, null, null, null, null,
                 DBHelper.COL_CARD_DESCRIPTION);
 

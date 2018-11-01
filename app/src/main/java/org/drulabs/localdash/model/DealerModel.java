@@ -29,6 +29,7 @@ public class DealerModel {
     }
 
     public List<CardModel> getReward(CardModel enemyDefeated){
+        System.out.println("REWARD" + enemyDefeated.getReward());
         List<CardModel> rewards = new ArrayList<>();
         for (int i = 0; i < enemyDefeated.getReward(); i++){
             rewards.add(itensDeck.remove(rand.nextInt(itensDeck.size())));

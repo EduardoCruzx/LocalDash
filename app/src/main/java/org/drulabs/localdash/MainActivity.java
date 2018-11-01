@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private ArrayList<SectionModel> myHand;
+    private ArrayList<CardModel> myHand;
     private RecyclerView recyclerView;
     private Button hand, play;
     private DBAdapter dbAdapter = null;
@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(battleIntent,3);
             }
         });
-
+        myHand = me.getHand();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
-        handAdapter = new SectionListCardAdapter(me.getHand(), this);
+        handAdapter = new SectionListCardAdapter(myHand, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(handAdapter);
         recyclerView.setVisibility(View.GONE);
@@ -144,21 +144,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void equipItem(CardModel item){
         int pos = dealer.equipItem(item, me);
-//        recyclerView.removeViewAt(pos);
-//        handAdapter.notifyItemRemoved(pos);
-//        handAdapter.notifyItemRangeChanged(0, me.getHand().size());
-//        mSectionsPagerAdapter.notifyFragmentAdapter();
+        //recyclerView.removeViewAt(pos);
+        handAdapter.notifyItemRemoved(pos);
+        //handAdapter.notifyItemRangeChanged(0, me.getHand().size());
+        mSectionsPagerAdapter.notifyFragmentAdapter();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        System.out.println("RESULT");
         if(data != null)
             if(resultCode == RESULT_OK && requestCode == 3){
                 me = (PlayerModel) data.getSerializableExtra("player");
                 CardModel enemy = (CardModel) data.getSerializableExtra("enemy");
                 if(dealer.kill(enemy, me)) {
+                    myHand = me.getHand();
+                    System.out.println(me.getHand().size() + " " + myHand.size());
                     handAdapter.notifyDataSetChanged();
+                    for(int i =0; i < myHand.size(); i++){
+                        System.out.println(myHand.get(i).getName());
+                    }
                 }
                 me.print();
             }
@@ -265,9 +269,9 @@ public class MainActivity extends AppCompatActivity {
             PlayerModel player = (PlayerModel) this.getArguments().getSerializable("player");
 
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_list);
-            SectionListCardAdapter adapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
+            itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(itemsAdapter);
 
             return rootView;
         }

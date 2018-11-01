@@ -12,7 +12,6 @@ public class PlayerModel implements Serializable {
     private String name, ip;
     private int level, power, port;
     private ArrayList<CardModel> hand, itensInPlay;
-    private ArrayList<SectionModel> handSection, tableSection;
 
     public PlayerModel() {
     }
@@ -25,8 +24,6 @@ public class PlayerModel implements Serializable {
         this.power = 0;
         this.itensInPlay = new ArrayList<>();
         this.hand = new ArrayList<>();
-        this.handSection = new ArrayList<>();
-        this.tableSection = new ArrayList<>();
     }
 
     public PlayerModel(String name, ArrayList<CardModel> hand) {
@@ -36,30 +33,6 @@ public class PlayerModel implements Serializable {
         this.power = 0;
     }
 
-    public ArrayList<SectionModel> getHandSection(){
-        SectionModel dm = new SectionModel();
-        dm.setName("Hand");
-        dm.setAllCardsInSection(this.hand);
-        handSection.add(dm);
-        return handSection;
-    }
-
-    public void updateHandSection(){
-        ArrayList<SectionModel> newHandSection = new ArrayList<>();
-        SectionModel dm = new SectionModel();
-        dm.setName("Hand");
-        dm.setAllCardsInSection(this.hand);
-        newHandSection.add(dm);
-        this.handSection = newHandSection;
-    }
-
-    public ArrayList<SectionModel> getTableSection(){
-        SectionModel dm = new SectionModel();
-        dm.setName("Table");
-        dm.setAllCardsInSection(this.itensInPlay);
-        tableSection.add(dm);
-        return tableSection;
-    }
 
     public String getIp() {
         return ip;
@@ -125,7 +98,6 @@ public class PlayerModel implements Serializable {
 
     public void addItemsToHand(List<CardModel> rewards){
         this.hand.addAll(rewards);
-        updateHandSection();
     }
 
     public void addItemToHand(CardModel reward){
