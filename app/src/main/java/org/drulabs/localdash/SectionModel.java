@@ -1,5 +1,7 @@
 package org.drulabs.localdash;
 
+import org.drulabs.localdash.model.CardModel;
+
 import java.util.ArrayList;
 
 public class SectionModel {

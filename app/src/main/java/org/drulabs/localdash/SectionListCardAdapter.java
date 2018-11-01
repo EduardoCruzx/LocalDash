@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.drulabs.localdash.model.CardModel;
+
 import java.util.ArrayList;
 
 public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCardAdapter.SingleItemRowHolder>{
@@ -33,6 +35,10 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
     public void onBindViewHolder(SingleItemRowHolder holder, int position) {
         CardModel itemModel = itemModels.get(position);
         holder.tvTitle.setText(itemModel.getName());
+        if (itemModel.getId() < 50)
+            holder.toast = String.valueOf(itemModel.getBonus());
+        else
+            holder.toast = String.valueOf(itemModel.getPower());
     }
 
     @Override
@@ -43,6 +49,7 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         protected TextView tvTitle;
+        protected String toast;
         protected ImageView itemImage;
 
         public SingleItemRowHolder(View itemView) {
@@ -52,7 +59,7 @@ public class SectionListCardAdapter extends RecyclerView.Adapter<SectionListCard
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), toast, Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.DeviceDTO;
@@ -37,11 +38,8 @@ import java.util.ArrayList;
 public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.OnListFragmentInteractionListener {
 
     PeerListFragment deviceListFragment;
-
     NsdHelper mNsdHelper;
-
     View progressBarLocalDash;
-
     AppController appController = null;
 
     private DeviceDTO selectedDevice;
@@ -50,13 +48,14 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.local_dash_nsd);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         initialize();
+
         mNsdHelper = new NsdHelper(this);
         mNsdHelper.initializeNsd();
         mNsdHelper.discoverServices();
+        mNsdHelper.tearDown();
+        mNsdHelper.registerService(ConnectionUtils.getPort(LocalDashNSD.this));
     }
 
     @Override
@@ -78,8 +77,6 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
         appController.startConnectionListener();
 
         checkWritePermission();
-
-        setToolBarTitle(0);
     }
 
     @Override
@@ -101,14 +98,6 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void advertiseService(View v) {
-        mNsdHelper.registerService(ConnectionUtils.getPort(LocalDashNSD.this));
-
-        Log.d("DXDXDX", Build.MANUFACTURER + " IP: " + Utility.getWiFiIPAddress(this));
-        Snackbar.make(v, "Advertising service", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
     }
 
     @Override
@@ -186,13 +175,12 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
                         ft.setTransition(FragmentTransaction.TRANSIT_NONE);
                         ft.commit();
                     }
-                    setToolBarTitle(peerCount);
                     break;
                 case DataHandler.CHAT_REQUEST_RECEIVED:
                     DeviceDTO chatRequesterDevice = (DeviceDTO) intent.getSerializableExtra(DataHandler
                             .KEY_CHAT_REQUEST);
                     //showChatRequestedDialog(chatRequesterDevice);
-                    DialogUtils.getChatRequestDialog(LocalDashNSD.this, chatRequesterDevice).show();
+                    DialogUtils.getChatRequestDialog(LocalDashNSD.this, chatRequesterDevice);
                     break;
                 case DataHandler.CHAT_RESPONSE_RECEIVED:
                     boolean isChatRequestAccepted = intent.getBooleanExtra(DataHandler
@@ -240,9 +228,9 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
     }
 
     private void checkWritePermission() {
-        boolean isGranted = Utility.checkPermission(HomeScreen.WRITE_PERMISSION, this);
+        boolean isGranted = Utility.checkPermission(ConnectActivity.WRITE_PERMISSION, this);
         if (!isGranted) {
-            Utility.requestPermission(HomeScreen.WRITE_PERMISSION, HomeScreen
+            Utility.requestPermission(ConnectActivity.WRITE_PERMISSION, ConnectActivity
                     .WRITE_PERM_REQ_CODE, this);
         }
     }
@@ -252,15 +240,6 @@ public class LocalDashNSD extends AppCompatActivity implements PeerListFragment.
         NotificationToast.showToast(LocalDashNSD.this, deviceDTO.getDeviceName() + " clicked");
         selectedDevice = deviceDTO;
 //        showServiceSelectionDialog();
-        DialogUtils.getServiceSelectionDialog(LocalDashNSD.this, deviceDTO).show();
-    }
-
-    private void setToolBarTitle(int peerCount) {
-        if (getSupportActionBar() != null) {
-            String title = String.format(getString(R.string.nsd_title_with_count), String
-                    .valueOf(peerCount));
-            getSupportActionBar().setTitle(title);
-
-        }
+        DialogUtils.getServiceSelectionDialog(LocalDashNSD.this, deviceDTO);
     }
 }

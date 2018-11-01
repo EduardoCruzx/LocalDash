@@ -7,7 +7,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.drulabs.localdash.ChatActivity;
-import org.drulabs.localdash.LocalDashWiFiDirect;
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.ChatDTO;
 import org.drulabs.localdash.model.DeviceDTO;
@@ -53,12 +52,6 @@ public class DataHandler {
                 processPeerDeviceInfo();
                 DataSender.sendCurrentDeviceData(mContext, senderIP,
                         dbAdapter.getDevice(senderIP).getPort(), false);
-                break;
-            case TransferConstants.CLIENT_DATA_WD:
-                processPeerDeviceInfo();
-                Intent intent = new Intent(LocalDashWiFiDirect.FIRST_DEVICE_CONNECTED);
-                intent.putExtra(LocalDashWiFiDirect.KEY_FIRST_DEVICE_IP, senderIP);
-                broadcaster.sendBroadcast(intent);
                 break;
             case TransferConstants.CHAT_REQUEST_SENT:
                 processChatRequestReceipt();

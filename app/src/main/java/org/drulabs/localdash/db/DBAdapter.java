@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.drulabs.localdash.model.CardModel;
 import org.drulabs.localdash.model.DeviceDTO;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class DBAdapter {
 
     private DBAdapter(Context context) {
         this.context = context;
+        System.out.println("CONTEXT");
         DBHelper dbHelper = new DBHelper(context);
         db = dbHelper.getWritableDatabase();
     }
@@ -58,6 +60,78 @@ public class DBAdapter {
 
         return -1;
 
+    }
+
+    public ArrayList<CardModel> GET_ITEMS() {
+        ArrayList<CardModel> items = null;
+        System.out.println("GET_ITEMS");
+        Cursor cursor = db.query(DBHelper.TABLE_CARDS_ITEM, null, null, null, null, null,
+                DBHelper.COL_CARD_DESCRIPTION);
+
+        if (cursor != null) {
+            items = new ArrayList<>();
+        } else {
+            return items;
+        }
+
+        int idIndex = cursor.getColumnIndex(DBHelper.COL_CARD_ID);
+        int nameIndex = cursor.getColumnIndex(DBHelper.COL_CARD_NAME);
+        int descriptionIndex = cursor.getColumnIndex(DBHelper.COL_CARD_DESCRIPTION);
+        int bonusIndex = cursor.getColumnIndex(DBHelper.COL_CARD_BONUS);
+        int availableIndex = cursor.getColumnIndex(DBHelper.COL_CARD_AVAILABLE);
+
+        while (cursor.moveToNext()) {
+            CardModel item = new CardModel();
+            item.setId(cursor.getInt(idIndex));
+            item.setName(cursor.getString(nameIndex));
+            item.setDescription(cursor.getString(descriptionIndex));
+            item.setBonus(cursor.getInt(bonusIndex));
+            item.setAvailable(cursor.getInt(availableIndex));
+
+            items.add(item);
+        }
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return items;
+    }
+
+    public ArrayList<CardModel> GET_ENEMIES() {
+        ArrayList<CardModel> enemies = null;
+
+        Cursor cursor = db.query(DBHelper.TABLE_CARDS_ENEMY, null, null, null, null, null,
+                DBHelper.COL_CARD_DESCRIPTION);
+
+        if (cursor != null) {
+            enemies = new ArrayList<>();
+        } else {
+            return enemies;
+        }
+
+        int idIndex = cursor.getColumnIndex(DBHelper.COL_CARD_ID);
+        int nameIndex = cursor.getColumnIndex(DBHelper.COL_CARD_NAME);
+        int descriptionIndex = cursor.getColumnIndex(DBHelper.COL_CARD_DESCRIPTION);
+        int powerIndex = cursor.getColumnIndex(DBHelper.COL_CARD_POWER);
+        int availableIndex = cursor.getColumnIndex(DBHelper.COL_CARD_AVAILABLE);
+
+        while (cursor.moveToNext()) {
+            CardModel enemy = new CardModel();
+            enemy.setId(cursor.getInt(idIndex));
+            enemy.setName(cursor.getString(nameIndex));
+            enemy.setDescription(cursor.getString(descriptionIndex));
+            enemy.setPower(cursor.getInt(powerIndex));
+            enemy.setAvailable(cursor.getInt(availableIndex));
+
+            enemies.add(enemy);
+        }
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return enemies;
     }
 
     public ArrayList<DeviceDTO> getDeviceList() {

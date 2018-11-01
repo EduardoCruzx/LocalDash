@@ -1,8 +1,8 @@
-package org.drulabs.localdash;
+package org.drulabs.localdash.model;
 
 public class CardModel {
     private String name, description;
-    private int id, bonus;
+    private int id, bonus, available, power, badstuff, reward;
 
     public CardModel() {
     }
@@ -12,6 +12,30 @@ public class CardModel {
         this.name = name;
         this.bonus = bonus;
     }
+
+    public int getBadstuff() {
+        return badstuff;
+    }
+
+    public void setBadstuff(int badstuff) {
+        this.badstuff = badstuff;
+    }
+
+    public int getReward() {
+        return reward;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
+    public int getAvailable() { return available; }
+
+    public void setAvailable(int available) { this.available = available; }
+
+    public int getPower() { return power; }
+
+    public void setPower(int power) { this.power = power; }
 
     public String getName() {
         return name;
@@ -41,7 +65,5 @@ public class CardModel {
         return bonus;
     }
 
-    public void setBonus(int bonus) {
-        this.bonus = bonus;
-    }
+    public void setBonus(int bonus) { this.bonus = bonus; }
 }

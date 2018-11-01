@@ -17,8 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import org.drulabs.localdash.db.DBAdapter;
+import org.drulabs.localdash.model.CardModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private ArrayList<SectionModel> allSampleData;
+    private RecyclerView recyclerView;
+    private Button hand;
+    private List<CardModel> enemies;
+    private List<CardModel> items;
+    private DBAdapter dbAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +64,26 @@ public class MainActivity extends AppCompatActivity {
         allSampleData = new ArrayList<>();
         createDummyData();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        hand = (Button) findViewById(R.id.btn_hand);
+        hand.setVisibility(View.VISIBLE);
+        hand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView.getVisibility() == View.GONE){
+                    recyclerView.setVisibility(View.VISIBLE);
+                }else {
+                    recyclerView.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerViewCardAdapter adapter = new RecyclerViewCardAdapter(allSampleData, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.GONE);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -172,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
+
+
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -183,19 +211,25 @@ public class MainActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        private static  ArrayList<SectionModel> allSampleData;
+        private static ArrayList<SectionModel> cardsection;
+        private static ArrayList<CardModel> items;
+        private static ArrayList<CardModel> enemies;
+        private static DBAdapter dbAdapter = null;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            allSampleData = new ArrayList<>();
+            dbAdapter = DBAdapter.getInstance(this.getContext());
+            items = dbAdapter.GET_ITEMS();
+            enemies = dbAdapter.GET_ENEMIES();
+            cardsection = new ArrayList<>();
             createDummyData();
 
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             recyclerView.setHasFixedSize(true);
-            RecyclerViewCardAdapter adapter = new RecyclerViewCardAdapter(allSampleData, this.getContext());
+            RecyclerViewCardAdapter adapter = new RecyclerViewCardAdapter(cardsection, this.getContext());
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(adapter);
 
@@ -203,16 +237,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private static void createDummyData() {
-            for (int i = 1; i <= 2; i++) {
+
+                System.out.println(items.size());
                 SectionModel dm = new SectionModel();
-                dm.setName("Section " + i);
-                ArrayList<CardModel> singleItemModels = new ArrayList<>();
-                for (int j = 1; j <= 20; j++) {
-                    singleItemModels.add(new CardModel(j,"Item " + j, j));
-                }
-                dm.setAllCardsInSection(singleItemModels);
-                allSampleData.add(dm);
-            }
+                dm.setName("Section " + 1);
+                dm.setAllCardsInSection(items);
+            cardsection.add(dm);
+
+            System.out.println(enemies.size());
+            SectionModel dm2 = new SectionModel();
+            dm2.setName("Section " + 2);
+            dm2.setAllCardsInSection(enemies);
+            cardsection.add(dm2);
         }
     }
 }
