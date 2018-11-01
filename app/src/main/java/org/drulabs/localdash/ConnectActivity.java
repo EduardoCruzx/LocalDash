@@ -23,6 +23,7 @@ public class ConnectActivity extends AppCompatActivity {
     public static final int WRITE_PERM_REQ_CODE = 19;
 
     private Button start;
+    private Button info;
     private EditText etUsername;
 
     @Override
@@ -40,6 +41,11 @@ public class ConnectActivity extends AppCompatActivity {
             public void onClick(View v) { startNSD(v); }
         });
 
+        info = findViewById(R.id.btn_info);
+        info.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { startInfo(v); }
+        });
+
         checkWritePermission();
     }
 
@@ -48,6 +54,18 @@ public class ConnectActivity extends AppCompatActivity {
             saveUsername();
             Intent nsdIntent = new Intent(ConnectActivity.this, LocalDashNSD.class);
             startActivity(nsdIntent);
+            finish();
+        } else {
+            NotificationToast.showToast(ConnectActivity.this, getString(R.string
+                    .wifi_not_connected_error));
+        }
+    }
+
+    public void startInfo(View v) {
+        if (Utility.isWifiConnected(ConnectActivity.this)) {
+            saveUsername();
+            Intent mainIntent = new Intent(ConnectActivity.this, MainActivity.class);
+            startActivity(mainIntent);
             finish();
         } else {
             NotificationToast.showToast(ConnectActivity.this, getString(R.string
