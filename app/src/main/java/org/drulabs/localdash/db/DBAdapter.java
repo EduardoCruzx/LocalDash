@@ -25,8 +25,8 @@ public class DBAdapter {
     private SQLiteDatabase db = null;
 
     private DBAdapter(Context context) {
-        this.context = context;
         System.out.println("CONTEXT");
+        this.context = context;
         DBHelper dbHelper = new DBHelper(context);
         db = dbHelper.getWritableDatabase();
     }
@@ -79,6 +79,7 @@ public class DBAdapter {
         int descriptionIndex = cursor.getColumnIndex(DBHelper.COL_CARD_DESCRIPTION);
         int bonusIndex = cursor.getColumnIndex(DBHelper.COL_CARD_BONUS);
         int availableIndex = cursor.getColumnIndex(DBHelper.COL_CARD_AVAILABLE);
+        int typeIndex = cursor.getColumnIndex(DBHelper.COL_CARD_TYPE);
 
         while (cursor.moveToNext()) {
             CardModel item = new CardModel();
@@ -87,6 +88,7 @@ public class DBAdapter {
             item.setDescription(cursor.getString(descriptionIndex));
             item.setBonus(cursor.getInt(bonusIndex));
             item.setAvailable(cursor.getInt(availableIndex));
+            item.setType(cursor.getInt(typeIndex));
 
             items.add(item);
         }
@@ -115,6 +117,9 @@ public class DBAdapter {
         int descriptionIndex = cursor.getColumnIndex(DBHelper.COL_CARD_DESCRIPTION);
         int powerIndex = cursor.getColumnIndex(DBHelper.COL_CARD_POWER);
         int availableIndex = cursor.getColumnIndex(DBHelper.COL_CARD_AVAILABLE);
+        int badstuffIndex = cursor.getColumnIndex(DBHelper.COL_CARD_BADSTUFF);
+        int rewardIndex = cursor.getColumnIndex(DBHelper.COL_CARD_REWARD);
+        int typeIndex = cursor.getColumnIndex(DBHelper.COL_CARD_TYPE);
 
         while (cursor.moveToNext()) {
             CardModel enemy = new CardModel();
@@ -123,6 +128,9 @@ public class DBAdapter {
             enemy.setDescription(cursor.getString(descriptionIndex));
             enemy.setPower(cursor.getInt(powerIndex));
             enemy.setAvailable(cursor.getInt(availableIndex));
+            enemy.setBadstuff(cursor.getInt(badstuffIndex));
+            enemy.setReward(cursor.getInt(rewardIndex));
+            enemy.setType(cursor.getInt(typeIndex));
 
             enemies.add(enemy);
         }

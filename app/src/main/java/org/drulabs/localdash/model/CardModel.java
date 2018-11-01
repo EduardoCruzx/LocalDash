@@ -1,8 +1,11 @@
 package org.drulabs.localdash.model;
 
 public class CardModel {
+    public static int ITEM = 0;
+    public static int ENEMY = 1;
+
     private String name, description;
-    private int id, bonus, available, power, badstuff, reward;
+    private int id, bonus, available, power, badstuff, reward, type;
 
     public CardModel() {
     }
@@ -11,6 +14,14 @@ public class CardModel {
         this.id = id;
         this.name = name;
         this.bonus = bonus;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getBadstuff() {

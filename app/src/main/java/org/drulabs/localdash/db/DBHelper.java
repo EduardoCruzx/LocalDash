@@ -35,6 +35,9 @@ public class DBHelper extends SQLiteOpenHelper {
     static final String COL_CARD_BONUS = "cardbonus";
     static final String COL_CARD_AVAILABLE = "cardavailable";
     static final String COL_CARD_POWER = "cardpower";
+    static final String COL_CARD_BADSTUFF = "cardbadstuff";
+    static final String COL_CARD_REWARD = "cardreward";
+    static final String COL_CARD_TYPE = "cardtype";
     static int I;
 
     private static final String CREATE_DEVICE_TABLE = "CREATE TABLE " + TABLE_DEVICES + "("
@@ -51,6 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + COL_CARD_NAME + " TEXT NOT NULL, "
             + COL_CARD_DESCRIPTION + " TEXT NOT NULL, "
             + COL_CARD_BONUS + " INTEGER, "
+            + COL_CARD_TYPE + " INTEGER DEFAULT " + CardModel.ITEM + ", "
             + COL_CARD_AVAILABLE + " INTEGER DEFAULT 1 " + ");";
 
     private static final String CREATE_CARDS_ENEMY_TABLE = "CREATE TABLE " + TABLE_CARDS_ENEMY + "("
@@ -58,6 +62,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + COL_CARD_NAME + " TEXT NOT NULL, "
             + COL_CARD_DESCRIPTION + " TEXT NOT NULL, "
             + COL_CARD_POWER + " INTEGER, "
+            + COL_CARD_BADSTUFF + " INTEGER, "
+            + COL_CARD_REWARD + " INTEGER, "
+            + COL_CARD_TYPE + " INTEGER DEFAULT " + CardModel.ENEMY + ", "
             + COL_CARD_AVAILABLE + " INTEGER DEFAULT 1 " + ");";
 
     public static List<ContentValues> CREATE_CARDS_ITEM (){
@@ -68,8 +75,8 @@ public class DBHelper extends SQLiteOpenHelper {
             initialValues.put(COL_CARD_ID, I);
             initialValues.put(COL_CARD_NAME, "Name " + I);
             initialValues.put(COL_CARD_DESCRIPTION, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec quam volutpat, maximus eros in, lacinia orci. Fusce facilisis euismod massa in convallis. Etiam tincidunt at odio at mollis. Curabitur pretium velit at commodo condimentum. ");
-            //initialValues.put(COL_CARD_POWER, rand.nextInt(4 + 1 + 5) - 5);
-            initialValues.put(COL_CARD_BONUS, rand.nextInt(4 + 1 - 1) + 1);
+            //initialValues.put(COL_CARD_POWER, rand.nextInt(4 + 1 + 5) - 5); // -5 a 4
+            initialValues.put(COL_CARD_BONUS, rand.nextInt(4 + 1 - 1) + 1); // 1 a 4
             valuesList.add(initialValues);
         }
 
@@ -85,7 +92,9 @@ public class DBHelper extends SQLiteOpenHelper {
             initialValues.put(COL_CARD_ID, I);
             initialValues.put(COL_CARD_NAME, "Name " + I);
             initialValues.put(COL_CARD_DESCRIPTION, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec quam volutpat, maximus eros in, lacinia orci. Fusce facilisis euismod massa in convallis. Etiam tincidunt at odio at mollis. Curabitur pretium velit at commodo condimentum. ");
-            initialValues.put(COL_CARD_POWER, rand.nextInt(7 + 1 - 1) + 1);
+            initialValues.put(COL_CARD_POWER, rand.nextInt(7 + 1 - 1) + 1); // 1 a 7
+            initialValues.put(COL_CARD_REWARD, rand.nextInt(2 + 1 - 0) + 0); // 0 a 2
+            initialValues.put(COL_CARD_BADSTUFF, rand.nextInt(0 + 1 + 2) - 2); // -2 a 0
             valuesList.add(initialValues);
         }
 
@@ -94,7 +103,9 @@ public class DBHelper extends SQLiteOpenHelper {
             initialValues.put(COL_CARD_ID, I);
             initialValues.put(COL_CARD_NAME, "Name " + I);
             initialValues.put(COL_CARD_DESCRIPTION, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec quam volutpat, maximus eros in, lacinia orci. Fusce facilisis euismod massa in convallis. Etiam tincidunt at odio at mollis. Curabitur pretium velit at commodo condimentum. ");
-            initialValues.put(COL_CARD_POWER, rand.nextInt( 12 + 1 - 8) + 8);
+            initialValues.put(COL_CARD_POWER, rand.nextInt( 12 + 1 - 8) + 8); // 8 a 12
+            initialValues.put(COL_CARD_REWARD, rand.nextInt(3 + 1 - 0) + 0); // 0 a 3
+            initialValues.put(COL_CARD_BADSTUFF, rand.nextInt(0 + 1 + 3) - 3); // -3 a 0
             valuesList.add(initialValues);
         }
 
@@ -103,7 +114,9 @@ public class DBHelper extends SQLiteOpenHelper {
             initialValues.put(COL_CARD_ID, I);
             initialValues.put(COL_CARD_NAME, "Name " + I);
             initialValues.put(COL_CARD_DESCRIPTION, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec quam volutpat, maximus eros in, lacinia orci. Fusce facilisis euismod massa in convallis. Etiam tincidunt at odio at mollis. Curabitur pretium velit at commodo condimentum. ");
-            initialValues.put(COL_CARD_POWER, rand.nextInt( 17 + 1 - 13) + 13);
+            initialValues.put(COL_CARD_POWER, rand.nextInt( 17 + 1 - 13) + 13); // 13 a 17
+            initialValues.put(COL_CARD_REWARD, rand.nextInt(3 + 1 - 1) + 1); // 1 a 3
+            initialValues.put(COL_CARD_BADSTUFF, rand.nextInt(-1 + 1 + 4) - 4); // -4 a -1
             valuesList.add(initialValues);
         }
 
@@ -112,7 +125,9 @@ public class DBHelper extends SQLiteOpenHelper {
             initialValues.put(COL_CARD_ID, I);
             initialValues.put(COL_CARD_NAME, "Name " + I);
             initialValues.put(COL_CARD_DESCRIPTION, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nec quam volutpat, maximus eros in, lacinia orci. Fusce facilisis euismod massa in convallis. Etiam tincidunt at odio at mollis. Curabitur pretium velit at commodo condimentum. ");
-            initialValues.put(COL_CARD_POWER, rand.nextInt( 20 + 1 - 18) + 18);
+            initialValues.put(COL_CARD_POWER, rand.nextInt( 20 + 1 - 18) + 18); // 18 a 20
+            initialValues.put(COL_CARD_REWARD, rand.nextInt(3 + 1 - 2) + 2); // 2 a 3
+            initialValues.put(COL_CARD_BADSTUFF, rand.nextInt(-2 + 1 + 4) - 4); // -4 a -2
             valuesList.add(initialValues);
         }
 

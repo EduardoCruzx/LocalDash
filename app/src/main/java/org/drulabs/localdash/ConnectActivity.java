@@ -22,7 +22,7 @@ public class ConnectActivity extends AppCompatActivity {
     public static final String WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final int WRITE_PERM_REQ_CODE = 19;
 
-    private Button start;
+    private Button start, info;
     private EditText etUsername;
 
     @Override
@@ -36,11 +36,23 @@ public class ConnectActivity extends AppCompatActivity {
         etUsername.setHint(userNameHint);
 
         start = findViewById(R.id.btn_match);
+        info = findViewById(R.id.btn_info);
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { startNSD(v); }
         });
+        info.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { start(v); }
+        });
 
         checkWritePermission();
+    }
+
+    public void start(View v) {
+            saveUsername();
+            Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+
     }
 
     public void startNSD(View v) {

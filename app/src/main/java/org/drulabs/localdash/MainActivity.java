@@ -18,9 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupWindow;
 
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.CardModel;
+import org.drulabs.localdash.model.DealerModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private List<CardModel> enemies;
     private List<CardModel> items;
     private DBAdapter dbAdapter = null;
+    private DealerModel dealer = null;
+    private PopupWindow popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         if(bar != null) {
             bar.hide();
         }
+        dbAdapter = DBAdapter.getInstance(getApplicationContext());
+        dealer = new DealerModel(dbAdapter);
+        dealer.startGame();
 
         allSampleData = new ArrayList<>();
         createDummyData();
