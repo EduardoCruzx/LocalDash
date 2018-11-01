@@ -23,6 +23,9 @@ import android.widget.PopupWindow;
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.CardModel;
 import org.drulabs.localdash.model.DealerModel;
+import org.drulabs.localdash.model.PlayerModel;
+import org.drulabs.localdash.transfer.TransferConstants;
+import org.drulabs.localdash.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<SectionModel> allSampleData;
     private RecyclerView recyclerView;
     private Button hand;
-    private List<CardModel> enemies;
-    private List<CardModel> items;
     private DBAdapter dbAdapter = null;
     private DealerModel dealer = null;
-    private PopupWindow popup;
+    public static final String KEY_CHATTING_WITH = "chattingwith";
+    public static final String KEY_CHAT_IP = "chatterip";
+    public static final String KEY_CHAT_PORT = "chatterport";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +67,16 @@ public class MainActivity extends AppCompatActivity {
         if(bar != null) {
             bar.hide();
         }
+
+        Bundle extras = getIntent().getExtras();
+        String myName = Utility.getString(getApplication(), TransferConstants.KEY_USER_NAME);
+        String myIP = Utility.getString(getApplication(), TransferConstants.KEY_MY_IP);
+        int myPort = Utility.getInt(getApplication(), TransferConstants.KEY_PORT_NUMBER);
+        PlayerModel me = new PlayerModel(myName, myIP, myPort);
+
         dbAdapter = DBAdapter.getInstance(getApplicationContext());
         dealer = new DealerModel(dbAdapter);
-        dealer.startGame();
+        dealer.startGame(extras, me);
 
         allSampleData = new ArrayList<>();
         createDummyData();
@@ -126,9 +136,7 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= 19) {
                 getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             } else {

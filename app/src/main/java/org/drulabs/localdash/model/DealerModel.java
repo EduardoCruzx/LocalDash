@@ -1,5 +1,8 @@
 package org.drulabs.localdash.model;
 
+import android.os.Bundle;
+
+import org.drulabs.localdash.MainActivity;
 import org.drulabs.localdash.db.DBAdapter;
 
 import java.util.ArrayList;
@@ -45,11 +48,15 @@ public class DealerModel {
         }
     }
 
-    public void startGame(){
+    public void startGame(Bundle extras, PlayerModel me){
         itensDeck = new ArrayList<>();
         enemyDeck = new ArrayList<>();
         itensDeck.addAll(dbAdapter.GET_ITEMS());
         enemyDeck.addAll(dbAdapter.GET_ENEMIES());
+        PlayerModel p = new PlayerModel(extras.getString(MainActivity.KEY_CHATTING_WITH), extras.getString(MainActivity.KEY_CHAT_IP), extras.getInt(MainActivity.KEY_CHAT_PORT));
+        p.print();
+        me.print();
+
     }
 
     private PlayerModel changeTurn(PlayerModel current){

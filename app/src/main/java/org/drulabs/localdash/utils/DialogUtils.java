@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
 import org.drulabs.localdash.ChatActivity;
+import org.drulabs.localdash.MainActivity;
 import org.drulabs.localdash.R;
 import org.drulabs.localdash.model.DeviceDTO;
 import org.drulabs.localdash.notification.NotificationToast;
@@ -98,10 +99,15 @@ public class DialogUtils {
     }
 
     public static void openChatActivity(Activity activity, DeviceDTO device) {
-        Intent chatIntent = new Intent(activity, ChatActivity.class);
-        chatIntent.putExtra(ChatActivity.KEY_CHAT_IP, device.getIp());
-        chatIntent.putExtra(ChatActivity.KEY_CHAT_PORT, device.getPort());
-        chatIntent.putExtra(ChatActivity.KEY_CHATTING_WITH, device.getPlayerName());
-        activity.startActivity(chatIntent);
+//        Intent chatIntent = new Intent(activity, ChatActivity.class);
+//        chatIntent.putExtra(ChatActivity.KEY_CHAT_IP, device.getIp());
+//        chatIntent.putExtra(ChatActivity.KEY_CHAT_PORT, device.getPort());
+//        chatIntent.putExtra(ChatActivity.KEY_CHATTING_WITH, device.getPlayerName());
+//        activity.startActivity(chatIntent);
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.putExtra(MainActivity.KEY_CHATTING_WITH, device.getPlayerName());
+        intent.putExtra(MainActivity.KEY_CHAT_IP, device.getIp());
+        intent.putExtra(MainActivity.KEY_CHAT_PORT, device.getPort());
+        activity.startActivity(intent);
     }
 }

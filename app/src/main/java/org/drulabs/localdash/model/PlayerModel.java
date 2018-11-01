@@ -3,11 +3,19 @@ package org.drulabs.localdash.model;
 import java.util.List;
 
 public class PlayerModel {
-    private String name;
-    private int level, power;
+    private String name, ip;
+    private int level, power, port;
     private List<CardModel> hand, itensInPlay;
 
     public PlayerModel() {
+    }
+
+    public PlayerModel(String name, String ip, int port) {
+        this.name = name;
+        this.ip = ip;
+        this.port = port;
+        this.level = 1;
+        this.power = 0;
     }
 
     public PlayerModel(String name, List<CardModel> hand) {
@@ -15,6 +23,22 @@ public class PlayerModel {
         this.hand = hand;
         this.level = 1;
         this.power = 0;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public String getName() {
@@ -63,5 +87,9 @@ public class PlayerModel {
 
     public void levelChange(int level){
         this.level = this.level + level;
+    }
+
+    public void print(){
+        System.out.println("Name: " + this.name + ", IP: " + this.ip + ", PORT: " + this.port);
     }
 }
