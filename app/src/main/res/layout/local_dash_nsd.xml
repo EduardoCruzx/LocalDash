@@ -10,4 +10,11 @@
 
     <include layout="@layout/content_local_dash_nsd"/>
 
+    <Button
+        android:id="@+id/startMatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Match"
+        />
+
 </android.support.design.widget.CoordinatorLayout>

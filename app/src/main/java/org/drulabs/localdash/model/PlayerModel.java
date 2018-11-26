@@ -106,6 +106,7 @@ public class PlayerModel implements Serializable {
 
     public int addItemToTable(CardModel item){
         int pos = hand.indexOf(item);
+        System.out.println("POSITION: " + pos);
         this.itensInPlay.add(hand.remove(pos));
         return pos;
     }

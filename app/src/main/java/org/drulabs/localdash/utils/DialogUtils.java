@@ -55,47 +55,49 @@ public class DialogUtils {
 //        return (alertDialog.create());
     }
 
-    public static void getChatRequestDialog(final Activity activity, final DeviceDTO requesterDevice) {
-        openChatActivity(activity, requesterDevice);
-        NotificationToast.showToast(activity, "Chat request " +
-                "accepted");
-        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
-                requesterDevice.getPort(), true);
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-//
-//        String chatRequestTitle = activity.getString(R.string.chat_request_title);
-//        chatRequestTitle = String.format(chatRequestTitle, requesterDevice.getPlayerName() + "(" +
-//                requesterDevice.getDeviceName() + ")");
-//        alertDialog.setTitle(chatRequestTitle);
-//        String[] types = {"Accept", "Reject"};
-//        alertDialog.setItems(types, new DialogInterface.OnClickListener() {
-//
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//                dialog.dismiss();
-//                switch (which) {
-//                    //Request accepted
-//                    case 0:
-//                        openChatActivity(activity, requesterDevice);
-//                        NotificationToast.showToast(activity, "Chat request " +
-//                                "accepted");
-//                        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
-//                                requesterDevice.getPort(), true);
-//                        break;
-//                    // Request rejected
-//                    case 1:
-//                        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
-//                                requesterDevice.getPort(), false);
-//                        NotificationToast.showToast(activity, "Chat request " +
-//                                "rejected");
-//                        break;
-//                }
-//            }
-//
-//        });
-//
-//        return (alertDialog.create());
+    public static AlertDialog getChatRequestDialog(final Activity activity, final DeviceDTO requesterDevice) {
+//        openChatActivity(activity, requesterDevice);
+//        NotificationToast.showToast(activity, "Chat request " +
+//                "accepted");
+//        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
+//                requesterDevice.getPort(), true);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+        String chatRequestTitle = activity.getString(R.string.chat_request_title);
+        chatRequestTitle = String.format(chatRequestTitle, requesterDevice.getPlayerName() + "(" +
+                requesterDevice.getDeviceName() + ")");
+        alertDialog.setTitle(chatRequestTitle);
+        String[] types = {"Accept", "Reject"};
+        alertDialog.setItems(types, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                switch (which) {
+                    //Request accepted
+                    case 0:
+                        // Aceita conexão e permite se juntar ao grupo
+                        // Não muda activity ao aceitar -> muda ao dar play
+                        // openChatActivity(activity, requesterDevice);
+                        NotificationToast.showToast(activity, "Chat request " +
+                                "accepted");
+                        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
+                                requesterDevice.getPort(), true);
+                        break;
+                    // Request rejected
+                    case 1:
+                        DataSender.sendChatResponse(activity, requesterDevice.getIp(),
+                                requesterDevice.getPort(), false);
+                        NotificationToast.showToast(activity, "Chat request " +
+                                "rejected");
+                        break;
+                }
+            }
+
+        });
+
+        return (alertDialog.create());
     }
 
     public static void openChatActivity(Activity activity, DeviceDTO device) {

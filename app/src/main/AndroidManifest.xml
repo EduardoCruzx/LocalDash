@@ -53,12 +53,15 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoTitle"></activity>
-
+            android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".BattleActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoTitle"></activity>
+            android:theme="@style/AppTheme.NoTitle" />
+        <activity
+            android:name=".WinnerActivity"
+            android:label="@string/title_activity_winner"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

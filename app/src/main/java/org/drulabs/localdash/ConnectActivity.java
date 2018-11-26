@@ -22,7 +22,7 @@ public class ConnectActivity extends AppCompatActivity {
     public static final String WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final int WRITE_PERM_REQ_CODE = 19;
 
-    private Button start, info;
+    private Button create, join, info;
     private EditText etUsername;
 
     @Override
@@ -35,10 +35,14 @@ public class ConnectActivity extends AppCompatActivity {
                 .MANUFACTURER + ")";
         etUsername.setHint(userNameHint);
 
-        start = findViewById(R.id.btn_match);
+        create = findViewById(R.id.btn_create);
+        join = findViewById(R.id.btn_join);
         info = findViewById(R.id.btn_info);
-        start.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { startNSD(v); }
+        create.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { createGroup(v); }
+        });
+        join.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { joinGroup(v); }
         });
         info.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { start(v); }
@@ -54,10 +58,10 @@ public class ConnectActivity extends AppCompatActivity {
             finish();
     }
 
-    public void startNSD(View v) {
+    public void createGroup(View v){
         if (Utility.isWifiConnected(ConnectActivity.this)) {
             saveUsername();
-            Intent nsdIntent = new Intent(ConnectActivity.this, LocalDashNSD.class);
+            Intent nsdIntent = new Intent(ConnectActivity.this, CreateNSD.class);
             startActivity(nsdIntent);
             finish();
         } else {
@@ -65,6 +69,30 @@ public class ConnectActivity extends AppCompatActivity {
                     .wifi_not_connected_error));
         }
     }
+
+    public void joinGroup(View v){
+        if (Utility.isWifiConnected(ConnectActivity.this)) {
+            saveUsername();
+            Intent nsdIntent = new Intent(ConnectActivity.this, JoinNSD.class);
+            startActivity(nsdIntent);
+            finish();
+        } else {
+            NotificationToast.showToast(ConnectActivity.this, getString(R.string
+                    .wifi_not_connected_error));
+        }
+    }
+
+//    public void startNSD(View v) {
+//        if (Utility.isWifiConnected(ConnectActivity.this)) {
+//            saveUsername();
+//            Intent nsdIntent = new Intent(ConnectActivity.this, LocalDashNSD.class);
+//            startActivity(nsdIntent);
+//            finish();
+//        } else {
+//            NotificationToast.showToast(ConnectActivity.this, getString(R.string
+//                    .wifi_not_connected_error));
+//        }
+//    }
 
     private void saveUsername() {
         String userName = etUsername.getText().toString();

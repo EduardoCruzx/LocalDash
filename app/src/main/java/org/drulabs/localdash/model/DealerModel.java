@@ -7,11 +7,13 @@ import org.drulabs.localdash.db.DBAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class DealerModel {
-    private List<CardModel> itensDeck, enemyDeck;
+    private List<CardModel> itensDeck, enemyDeck, discardEnemyDeck, discardItensDeck;
     private List<PlayerModel> turnOrder;
     private PlayerModel turn;
     private Random rand = new Random();
@@ -25,13 +27,31 @@ public class DealerModel {
     }
 
     public CardModel kickTheDoor(){
-        return enemyDeck.remove(rand.nextInt(enemyDeck.size()));
+        // Remove 1 carta da lista enemyDeck
+        // Adiciona a carta a lista discardEnemyDeck
+        // Retorna a carta para batalha
+
+        if (enemyDeck.isEmpty()){
+            Collections.shuffle(discardEnemyDeck);
+            enemyDeck.addAll(discardEnemyDeck);
+        }
+
+        CardModel enemyChosen = enemyDeck.remove(rand.nextInt(enemyDeck.size()));
+        discardEnemyDeck.add(enemyChosen);
+        return enemyChosen;
     }
 
     public List<CardModel> getReward(CardModel enemyDefeated){
         System.out.println("REWARD" + enemyDefeated.getReward());
+        // Cria uma lista para receber as cartas de recompensa
+
+        int reward = enemyDefeated.getReward();
+        if(itensDeck.size() < reward)
+            reward = itensDeck.size();
+
+
         List<CardModel> rewards = new ArrayList<>();
-        for (int i = 0; i < enemyDefeated.getReward(); i++){
+        for (int i = 0; i < reward; i++){
             rewards.add(itensDeck.remove(rand.nextInt(itensDeck.size())));
         }
         return rewards;
@@ -60,6 +80,8 @@ public class DealerModel {
     public void startGame(Bundle extras, PlayerModel me){
         itensDeck = new ArrayList<>();
         enemyDeck = new ArrayList<>();
+        discardItensDeck = new ArrayList<>();
+        discardEnemyDeck = new ArrayList<>();
         turnOrder = new ArrayList<>();
         itensDeck.addAll(dbAdapter.GET_ITEMS());
         enemyDeck.addAll(dbAdapter.GET_ENEMIES());
@@ -82,7 +104,7 @@ public class DealerModel {
         return turn;
     }
 
-    private boolean checkWinner(PlayerModel player){
+    public boolean checkWinner(PlayerModel player){
         if (player.getLevel() == 10)
             return true;
         else

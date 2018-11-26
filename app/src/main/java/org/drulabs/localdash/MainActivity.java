@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import org.drulabs.localdash.db.DBAdapter;
 import org.drulabs.localdash.model.CardModel;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(battleIntent,3);
             }
         });
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_list);
+        recyclerView = findViewById(R.id.recycler_view_list);
         handAdapter = new SectionListCardAdapter(me.getHand(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(handAdapter);
@@ -143,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
+
+    // SectionListCardAdapter adiciona carta ao segurar
     public void equipItem(CardModel item){
         int pos = dealer.equipItem(item, me);
         handAdapter.notifyItemRemoved(pos);
@@ -159,6 +162,12 @@ public class MainActivity extends AppCompatActivity {
                     handAdapter = new SectionListCardAdapter(me.getHand(), this);
                     recyclerView.setAdapter(handAdapter);
                     handAdapter.notifyDataSetChanged();
+                    mSectionsPagerAdapter.notifyFragmentAdapter(me);
+                    if(dealer.checkWinner(me)){
+                        Intent intent = new Intent(MainActivity.this, WinnerActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
     }
@@ -242,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         private SectionListCardAdapter itemsAdapter;
         private RecyclerView recyclerView;
         private PlayerModel player;
+        private TextView level, power;
 
         public PlayerModel getPlayer() {
             return player;
@@ -265,6 +275,8 @@ public class MainActivity extends AppCompatActivity {
             itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
             recyclerView.setAdapter(itemsAdapter);
             itemsAdapter.notifyDataSetChanged();
+            level.setText(String.valueOf(player.getLevel()));
+            power.setText(String.valueOf(player.getPower()));
         }
 
         @Override
@@ -275,6 +287,11 @@ public class MainActivity extends AppCompatActivity {
             player = (PlayerModel) this.getArguments().getSerializable("player");
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_list);
+            level = rootView.findViewById(R.id.level);
+            power = rootView.findViewById(R.id.power);
+            level.setText(String.valueOf(player.getLevel()));
+            power.setText(String.valueOf(player.getPower()));
+
             itemsAdapter = new SectionListCardAdapter(player.getItensInPlay(), this.getContext());
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(itemsAdapter);
